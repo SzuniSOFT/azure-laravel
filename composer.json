@@ -1,0 +1,62 @@
+{
+  "name" : "szunisoft/azure-laravel",
+  "license": "Apache-2.0",
+  "description" : "Laravel Azure package supporting storage queue",
+  "keywords" : ["azure", "storage", "queue", "laravel"],
+  "authors" : [
+    {
+      "name" : "Forgács Bence",
+      "email" : "sykorax93@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1.3",
+    "microsoft/azure-storage-queue": "1.1.0",
+    "microsoft/azure-storage-blob": "1.1.0",
+    "microsoft/azure-storage-file": "1.1.0",
+    "microsoft/azure-storage-table": "1.1.0",
+    "league/flysystem" : "~1.0",
+    "nesbot/carbon": "^1.0",
+    "illuminate/queue" : "~5.6",
+    "illuminate/support" : "~5.6",
+    "illuminate/contracts" : "~5.6",
+    "illuminate/filesystem": "~5.6"
+  },
+  "require-dev": {
+    "mockery/mockery" : "~1.0",
+    "phpunit/phpunit": "~7.0",
+    "illuminate/console" : "~5.6",
+    "orchestra/testbench": "3.6.*"
+  },
+  "autoload" : {
+    "files": [
+
+    ],
+    "psr-4" : {
+      "SzuniSoft\\Azure\\Laravel\\" : "src/"
+    }
+  },
+  "autoload-dev" : {
+    "psr-4" : {
+      "SzuniSoft\\Azure\\Laravel\\Test\\" : "tests/"
+    }
+  },
+  "extra" : {
+    "branch-alias" : {
+      "dev-development" : "1.0-dev"
+    },
+    "laravel" : {
+      "aliases" : {
+
+      },
+      "providers" : [
+        "SzuniSoft\\Azure\\Laravel\\Providers\\LaravelServiceProvider"
+      ]
+    }
+  },
+  "config" : {
+    "sort-packages" : true
+  },
+  "minimum-stability" : "dev",
+  "prefer-stable" : true
+}
