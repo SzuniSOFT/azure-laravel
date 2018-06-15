@@ -49,6 +49,21 @@ class AzureJobTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_be_base_64_encoded()
+    {
+        $message = new QueueMessage();
+        $message->setMessageId(123);
+        $message->setPopReceipt(234);
+        $message->setMessageText(base64_encode(json_encode(['something' => 'important'])));
+        $message->setDequeueCount(5);
+        $job = new AzureJob($this->app, $this->azure, $message, 'testconnection', 'testqueue', true);
+
+        $this->assertSame([
+            'something' => 'important'
+        ], json_decode($job->getRawBody(), true));
+    }
+
+    /** @test */
     public function it_can_get_job_id()
     {
         $this->assertEquals(123, $this->job->getJobId());

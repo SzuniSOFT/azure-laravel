@@ -27,16 +27,22 @@ class AzureFileStorage extends AbstractAzureStorage {
      * @var string
      */
     protected $share;
+    /**
+     * @var bool
+     */
+    protected $autoCreateShare;
 
     /**
      * AzureFileStorage constructor.
      * @param IFile $azureClient
      * @param $share
+     * @param bool $autoCreateShare
      */
-    public function __construct(IFile $azureClient, $share)
+    public function __construct(IFile $azureClient, $share, $autoCreateShare = false)
     {
         $this->azure = $azureClient;
         $this->share = $share;
+        $this->autoCreateShare = $autoCreateShare;
     }
 
     /**
@@ -77,12 +83,32 @@ class AzureFileStorage extends AbstractAzureStorage {
 
         $path = $this->normalizePath($path);
 
-        $this->azure->createFileFromContent(
-            $this->share,
-            $path,
-            $contents,
-            $this->getOptionsFromConfig($config)
-        );
+        try {
+
+            $this->azure->createFileFromContent(
+                $this->share,
+                $path,
+                $contents,
+                $this->getOptionsFromConfig($config)
+            );
+        } catch (ServiceException $exception) {
+
+            if ($exception->getCode() == 404 and $this->autoCreateShare) {
+
+                $this->azure->createShare($this->share);
+
+                $this->azure->createFileFromContent(
+                    $this->share,
+                    $path,
+                    $contents,
+                    $this->getOptionsFromConfig($config)
+                );
+            }
+            else {
+                throw $exception;
+            }
+
+        }
 
         /** @var \MicrosoftAzure\Storage\File\Models\FileProperties $result */
         $result = $this->azure->getFileProperties($this->share, $path);

@@ -70,6 +70,38 @@ class AzureFileStorageTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_automatically_create_share()
+    {
+
+        $this->azure = Mockery::mock(IFile::class);
+        $storage = new AzureFileStorage($this->azure, 'test', true);
+
+        $response = Mockery::mock(ResponseInterface::class);
+
+        $response->shouldReceive('getStatusCode')->andReturn(404);
+        $response->shouldReceive('getReasonPhrase')->andReturn('Not found');
+        $response->shouldReceive('getBody')->andReturn('Not found');
+
+        $exception = new ServiceException($response);
+
+        $this->azure->shouldReceive('createFileFromContent')
+            ->once()
+            ->andThrow($exception);
+
+        $this->azure->shouldReceive('createShare')
+            ->once();
+
+        $this->azure->shouldReceive('createFileFromContent')
+            ->once();
+
+        $this->azure->shouldReceive('getFileProperties')
+            ->once()
+            ->andReturn($this->getFileProperties('Wed, 07 Jul 1993 00:00:00 +0000'));
+
+        $storage->write('foo.txt', 'test content', new Config());
+    }
+
+    /** @test */
     public function it_can_get_azure_proxy()
     {
         $this->assertEquals($this->azure, $this->storage->getAzure());

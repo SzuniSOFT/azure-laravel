@@ -29,6 +29,16 @@ class AzureConnectorTest extends TestCase {
         $this->queueRestProxy = Mockery::mock('alias:' . QueueRestProxy::class);
     }
 
+    /** @test */
+    public function it_can_receive_default_queue_by_default_config()
+    {
+
+        $defaultConfig = ['default' => 'default'];
+        $connector = new AzureConnector($defaultConfig);
+
+        $this->assertArrayHasKey('queue', $connector->getDefaultConfig());
+        $this->assertEquals('default', $connector->getDefaultConfig()['queue']);
+    }
 
     /**
      * @test
@@ -37,13 +47,13 @@ class AzureConnectorTest extends TestCase {
 
         $config = [
             'protocol' => 'https',
-            'accountname' => 'foo',
+            'account_name' => 'foo',
             'key' => 'bar',
             'queue' => 'baz',
             'timeout' => 25
         ];
 
-        $connectionString = 'DefaultEndpointsProtocol=' . $config['protocol'] . ';AccountName=' . $config['accountname'] . ';AccountKey=' . $config['key'];
+        $connectionString = 'DefaultEndpointsProtocol=' . $config['protocol'] . ';AccountName=' . $config['account_name'] . ';AccountKey=' . $config['key'];
         $queueProxy = Mockery::mock(IQueue::class);
 
         $this->queueRestProxy->shouldReceive('createQueueService')

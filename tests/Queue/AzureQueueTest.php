@@ -4,10 +4,12 @@
 namespace SzuniSoft\Azure\Laravel\Test\Queue;
 
 
+use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
 use MicrosoftAzure\Storage\Queue\Models\CreateMessageOptions;
 use MicrosoftAzure\Storage\Queue\Models\GetQueueMetadataResult;
 use MicrosoftAzure\Storage\Queue\Models\ListMessagesOptions;
 use Mockery;
+use Psr\Http\Message\ResponseInterface;
 use SzuniSoft\Azure\Laravel\Queue\AzureJob;
 use SzuniSoft\Azure\Laravel\Queue\AzureQueue;
 use SzuniSoft\Azure\Laravel\Test\Queue\Fixtures;
@@ -59,6 +61,47 @@ class AzureQueueTest extends TestCase {
             "timeout" => null,
             "data" => "testData"
         ];
+    }
+
+    /** @test */
+    public function it_can_automatically_create_azure_queue()
+    {
+
+        $response = Mockery::mock(ResponseInterface::class);
+        $response->shouldReceive('getStatusCode')->andReturn(404);
+        $response->shouldReceive('getReasonPhrase')->andReturn('Not found');
+        $response->shouldReceive('getBody')->andReturn('Not found');
+
+        $exception = new ServiceException($response);
+
+        $this->azure->shouldReceive('createMessage')
+            ->twice()
+            ->andThrow($exception);
+
+        $this->expectException(ServiceException::class);
+
+        $this->azure->shouldReceive('createQueue')->once()->withArgs(['testqueue']);
+
+        $queue = new AzureQueue($this->azure, 'testqueue', 30, false, true);
+        $queue->push('testJob', 'testData');
+    }
+
+    /** @test */
+    public function it_can_base_64_encode_jobs()
+    {
+
+        $job = $this->job();
+
+        $queue = new AzureQueue($this->azure, 'testqueue', 30, true);
+        $queue->setContainer($this->app);
+
+        $this->azure->shouldReceive('createMessage')->once()
+            ->withArgs([
+                'testqueue',
+                base64_encode(json_encode($job))
+            ]);
+
+        $queue->push('testJob', 'testData');
     }
 
     /** @test */

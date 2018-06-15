@@ -72,6 +72,35 @@ class AzureBlobStorageTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_automatically_create_container()
+    {
+
+        $storage = new AzureBlobStorage($this->azure, 'test', true);
+
+        $response = Mockery::mock(ResponseInterface::class);
+
+        $response->shouldReceive('getStatusCode')->andReturn(404);
+        $response->shouldReceive('getReasonPhrase')->andReturn('Not found');
+        $response->shouldReceive('getBody')->andReturn('Not found');
+
+        $exception = new ServiceException($response);
+
+        $this->azure->shouldReceive('createBlockBlob')
+            ->once()
+            ->andThrow($exception);
+
+        $this->azure->shouldReceive('createContainer')
+            ->once();
+
+        $this->azure->shouldReceive('createBlockBlob')
+            ->once()
+            ->andReturn($this->getCopyBlobResult('Wed, 07 Jul 1993 00:00:00 +0000'));
+
+
+        $storage->write('foo/bar.txt', 'test', new Config());
+    }
+
+    /** @test */
     public function it_can_write_string_content()
     {
         $content = ['content' => true];

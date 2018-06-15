@@ -9,15 +9,41 @@ return [
     'credentials' => [
 
         'protocol' => 'https',
-        'accountname' => env('AZURE_ACCOUNT_NAME'),
+        'account_name' => env('AZURE_ACCOUNT_NAME'),
         'key' => env('AZURE_ACCOUNT_KEY')
+
+    ],
+
+    /*
+     * You can override these values in the queue specific connection config
+     * */
+    'queue' => [
+
+        /*
+         * The name of default queue
+         * */
+        'default' => 'default',
+
+        /*
+         * Automatically create Queues if not created.
+         *
+         * default: false
+         * */
+        'auto_create_queue' => false,
+
+        /*
+         * Automatically base64 encode message bodies. Azure recommends it.
+         *
+         * default: true
+         */
+        'auto_base64' => true,
 
     ],
 
     'storage' => [
 
         /*
-        * The Azure storage driver type
+         * The Azure storage driver type
          * To make your best decision you may visit this guy here:
          * https://docs.microsoft.com/en-us/azure/storage/common/storage-decide-blobs-files-disks
          *
@@ -31,20 +57,33 @@ return [
 
         'types' => [
 
+            // You can override these stings implicitly in the storage config
             'blob' => [
 
                 /*
                  * The default container name in the Azure Storage for Blob FS.
                  * */
-                'container' => env('AZURE_STORAGE_BLOB_CONTAINER')
+                'container' => env('AZURE_STORAGE_BLOB_CONTAINER'),
+
+                /*
+                 * Automatically create remote container when does not exist.
+                 * */
+                'auto_create_container' => false,
             ],
 
+            // You can override these stings implicitly in the storage config
             'file' => [
 
                 /*
                  * The default share name in thee Azure Storage for Common FS.
                  * */
-                'share' => env('AZURE_STORAGE_FILE_SHARE')
+                'share' => env('AZURE_STORAGE_FILE_SHARE'),
+
+                /*
+                 * Automatically create remote share when does not exist.
+                 * */
+                'auto_create_share' => false,
+
             ]
 
         ],

@@ -4,6 +4,7 @@
 namespace SzuniSoft\Azure\Laravel\Providers;
 
 
+use Illuminate\Cache\Repository;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
@@ -14,44 +15,68 @@ class StorageServiceProvider extends ServiceProvider {
 
     public function boot()
     {
-        $this->registerAzureBlobDriver();
-        $this->registerAzureFileDriver();;
+
+        $this->registerAzureDriver(
+            'azure.blob',
+            AzureBlobStorage::class,
+            \MicrosoftAzure\Storage\Blob\BlobRestProxy::class,
+            'createBlobService',
+            'container'
+        );
+
+        $this->registerAzureDriver(
+            'azure.file',
+            AzureFileStorage::class,
+            \MicrosoftAzure\Storage\File\FileRestProxy::class,
+            'createFileService',
+            'share'
+        );
+
     }
 
-    protected function registerAzureBlobDriver()
+    /**
+     * @param string $driverName
+     * @param string $driverClass
+     * @param string $azureClientClass
+     * @param string $azureClientClassMethod
+     * @param string $subjectTypeName
+     */
+    protected function registerAzureDriver(
+        $driverName,
+        $driverClass,
+        $azureClientClass,
+        $azureClientClassMethod,
+        $subjectTypeName
+    )
     {
 
         /**  @var FilesystemManager $manager */
         $manager = $this->app['filesystem'];
 
-        $manager->extend('azure.blob', function ($app, $config) {
+        $manager->extend($driverName, function ($app, $config) use (&$driverName, &$driverClass, &$azureClientClass, &$azureClientClassMethod, &$subjectTypeName) {
+
+            /**  @var Repository $configRepository */
+            $configRepository = $app['config'];
+
+            $type = explode('.', $driverName)[1];
+
+            $config = array_merge(
+                [
+                    'auto_create_' . $subjectTypeName => false
+                ],
+                $configRepository['azure.storage.types.' . $type],
+                $config);
 
             $connectionString = isset($config['connection_string'])
-                ?  $config['connection_string']
-                : 'DefaultEndpointsProtocol=' . $config['protocol'] . ';AccountName=' . $config['accountname'] . ';AccountKey=' . $config['key'];
+                ? $config['connection_string']
+                : 'DefaultEndpointsProtocol=' . $config['protocol'] . ';AccountName=' . $config['account_name'] . ';AccountKey=' . $config['key'];
 
-            $client = \MicrosoftAzure\Storage\Blob\BlobRestProxy::createBlobService($connectionString);
-            return new Filesystem(new AzureBlobStorage($client, $config['container']), $config);
+            $client = call_user_func($azureClientClass . '::' . $azureClientClassMethod, $connectionString);
+            return new Filesystem(new $driverClass($client, $config[$subjectTypeName], $config['auto_create_' . $subjectTypeName]), $config);
         });
 
+        
     }
 
-    protected function registerAzureFileDriver()
-    {
-
-        /**  @var FilesystemManager $manager */
-        $manager = $this->app['filesystem'];
-
-        $manager->extend('azure.file', function ($app, $config) {
-
-            $connectionString = isset($config['connection_string'])
-                ?  $config['connection_string']
-                : 'DefaultEndpointsProtocol=' . $config['protocol'] . ';AccountName=' . $config['accountname'] . ';AccountKey=' . $config['key'];
-
-            $client = \MicrosoftAzure\Storage\File\FileRestProxy::createFileService($connectionString);
-            return new Filesystem(new AzureFileStorage($client, $config['share']), $config);
-        });
-
-    }
 
 }
