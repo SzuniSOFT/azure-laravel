@@ -30,14 +30,21 @@ class AzureBlobStorage extends AbstractAzureStorage {
     protected $container;
 
     /**
+     * @var bool
+     */
+    protected $autoCreateContainer;
+
+    /**
      * AzureStorage constructor.
      * @param IBlob $azureClient
      * @param string $container
+     * @param bool $autoCreateContainer
      */
-    public function __construct(IBlob $azureClient, $container)
+    public function __construct(IBlob $azureClient, $container, $autoCreateContainer = false)
     {
         $this->azure = $azureClient;
         $this->container = $container;
+        $this->autoCreateContainer = $autoCreateContainer;
     }
 
     /**
@@ -431,12 +438,30 @@ class AzureBlobStorage extends AbstractAzureStorage {
         $path = $this->normalizePath($path);
 
         /**  @var \MicrosoftAzure\Storage\Blob\Models\CopyBlobResult $result */
-        $result = $this->azure->createBlockBlob(
-            $this->container,
-            $path,
-            $contents,
-            $this->getOptionsFromConfig($config)
-        );
+        try {
+            $result = $this->azure->createBlockBlob(
+                $this->container,
+                $path,
+                $contents,
+                $this->getOptionsFromConfig($config)
+            );
+        } catch (ServiceException $exception) {
+
+            if ($exception->getCode() == 404 and $this->autoCreateContainer) {
+
+                $this->azure->createContainer($this->container);
+
+                $result = $this->azure->createBlockBlob(
+                    $this->container,
+                    $path,
+                    $contents,
+                    $this->getOptionsFromConfig($config)
+                );
+            }
+            else {
+                throw $exception;
+            }
+        }
 
         return $this->normalize($path, $result->getLastModified()->format('U'), $contents);
     }

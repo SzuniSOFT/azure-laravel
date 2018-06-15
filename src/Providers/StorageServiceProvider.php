@@ -60,16 +60,22 @@ class StorageServiceProvider extends ServiceProvider {
 
             $type = explode('.', $driverName)[1];
 
-            $config = array_merge($configRepository['azure.storage.types.' . $type], $config);
+            $config = array_merge(
+                [
+                    'auto_create_' . $subjectTypeName => false
+                ],
+                $configRepository['azure.storage.types.' . $type],
+                $config);
 
             $connectionString = isset($config['connection_string'])
                 ? $config['connection_string']
                 : 'DefaultEndpointsProtocol=' . $config['protocol'] . ';AccountName=' . $config['account_name'] . ';AccountKey=' . $config['key'];
 
             $client = call_user_func($azureClientClass . '::' . $azureClientClassMethod, $connectionString);
-            return new Filesystem(new $driverClass($client, $config[$subjectTypeName], $config));
+            return new Filesystem(new $driverClass($client, $config[$subjectTypeName], $config['auto_create_' . $subjectTypeName]), $config);
         });
 
+        
     }
 
 
