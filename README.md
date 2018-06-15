@@ -1,3 +1,6 @@
+[![Total Downloads](https://poser.pugx.org/szunisoft/azure-laravel/downloads?format=flat-square)](https://packagist.org/packages/szunisoft/azure-laravel)
+[![License](https://poser.pugx.org/szunisoft/azure-laravel/license)](https://packagist.org/packages/szunisoft/azure-laravel)
+
 # Laravel Azure
 This package is a continuously developed package which provides a full Azure integration for Laravel offering the following drivers / adapters.
 
