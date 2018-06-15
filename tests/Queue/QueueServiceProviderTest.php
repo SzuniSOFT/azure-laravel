@@ -16,12 +16,16 @@ class QueueServiceProviderTest extends \Orchestra\Testbench\TestCase {
 
         $mockLaravel = Mockery::mock(\Illuminate\Foundation\Application::class);
         $mockQueueManager = Mockery::mock(\Illuminate\Queue\QueueManager::class);
+        $mockConfig = Mockery::mock(\Illuminate\Cache\Repository::class);
+
+        $mockConfig->shouldReceive('offsetGet')->with('azure.queue')->andReturn([]);
 
         $mockQueueManager->shouldReceive('addConnector')->withArgs(function ($driver, $closure) {
             return $driver === 'azure' && ($closure() instanceof AzureConnector);
         });
 
         $mockLaravel->shouldReceive('offsetGet')->with('queue')->andReturn($mockQueueManager);
+        $mockLaravel->shouldReceive('offsetGet')->with('config')->andReturn($mockConfig);
 
         $serviceProvider = new QueueServiceProvider($mockLaravel);
 

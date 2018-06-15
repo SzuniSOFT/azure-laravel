@@ -31,6 +31,7 @@ class StorageServiceProvider extends ServiceProvider {
             'createFileService',
             'share'
         );
+
     }
 
     /**
