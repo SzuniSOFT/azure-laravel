@@ -18,6 +18,7 @@
         </testsuite>
     </testsuites>
     <php>
+        <env name="" value=""></env>
         <!--
         <env name="KEY" value="value" />
          -->

@@ -4,6 +4,7 @@
 namespace SzuniSoft\Azure\Laravel\Queue;
 
 use Illuminate\Contracts;
+use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
 use MicrosoftAzure\Storage\Queue\Internal\IQueue;
 use MicrosoftAzure\Storage\Queue\Models\CreateMessageOptions;
 use MicrosoftAzure\Storage\Queue\Models\GetQueueMetadataResult;
@@ -31,16 +32,30 @@ class AzureQueue extends \Illuminate\Queue\Queue implements Contracts\Queue\Queu
     protected $default;
 
     /**
+     * @var bool
+     */
+    protected $autoBase64;
+
+    /**
+     * @var bool
+     */
+    protected $autoCreateQueues;
+
+    /**
      * AzureQueue constructor.
      * @param IQueue $azure
      * @param $default
      * @param $visibilityTimeout
+     * @param bool $autoBase64
+     * @param bool $autoCreateQueues
      */
-    public function __construct(IQueue $azure, $default, $visibilityTimeout)
+    public function __construct(IQueue $azure, $default, $visibilityTimeout, $autoBase64 = false, $autoCreateQueues = false)
     {
         $this->azure = $azure;
         $this->default = $default;
         $this->visibilityTimeout = $visibilityTimeout ?: 5;
+        $this->autoBase64 = $autoBase64;
+        $this->autoCreateQueues = $autoCreateQueues;
     }
 
     /**
@@ -104,8 +119,45 @@ class AzureQueue extends \Illuminate\Queue\Queue implements Contracts\Queue\Queu
      */
     public function pushRaw($payload, $queue = null, array $options = [])
     {
-        $this->azure->createMessage($this->getQueue($queue), $payload);
+
+        $queue = $this->getQueue($queue);
+
+        try {
+
+            $this->azure->createMessage($queue, $payload);
+
+        } catch (ServiceException $exception) {
+
+            // Automatically create queues in Azure Storage
+            if ($this->autoCreateQueues and $exception->getCode() == 404) {
+
+                $this->azure->createQueue($queue);
+                $this->azure->createMessage($queue, $payload);
+
+            } else {
+                throw $exception;
+            }
+        }
     }
+
+    /**
+     * @param string $job
+     * @param string $data
+     * @return string
+     */
+    protected function createPayload($job, $data = '')
+    {
+        $payload = parent::createPayload($job, $data);
+
+        // Automatic base64 encode
+        // Azure prefers base64 encoded messages
+        if ($this->autoBase64) {
+            $payload = base64_encode($payload);
+        }
+
+        return $payload;
+    }
+
 
     /**
      * Push a new job onto the queue after a delay.
@@ -147,7 +199,14 @@ class AzureQueue extends \Illuminate\Queue\Queue implements Contracts\Queue\Queu
         $messages = $listMessages->getQueueMessages();
 
         if (!empty($messages)) {
-            return new AzureJob($this->container, $this->azure, $messages[0], $this->connectionName, $queue);
+            return new AzureJob(
+                $this->container,
+                $this->azure,
+                $messages[0],
+                $this->connectionName,
+                $queue,
+                $this->autoBase64
+            );
         }
 
         return null;

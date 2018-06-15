@@ -27,19 +27,35 @@ class AzureJob extends Job implements Contracts\Queue\Job {
      * @var string
      */
     protected $queue;
+    /**
+     * @var bool
+     */
+    protected $autoBase64;
 
-    public function __construct(Container $container, IQueue $azure, QueueMessage $job, $connectionName, $queue) {
+    /**
+     * AzureJob constructor.
+     * @param Container $container
+     * @param IQueue $azure
+     * @param QueueMessage $job
+     * @param $connectionName
+     * @param $queue
+     * @param bool $autoBase64
+     */
+    public function __construct(Container $container, IQueue $azure, QueueMessage $job, $connectionName, $queue, $autoBase64 = false)
+    {
         $this->azure = $azure;
         $this->queue = $queue;
         $this->job = $job;
         $this->container = $container;
         $this->connectionName = $connectionName;
+        $this->autoBase64 = $autoBase64;
     }
 
     /**
      * @inheritdoc
      */
-    public function delete() {
+    public function delete()
+    {
         parent::delete();
         $this->azure->deleteMessage($this->queue, $this->job->getMessageId(), $this->job->getPopReceipt());
     }
@@ -50,7 +66,8 @@ class AzureJob extends Job implements Contracts\Queue\Job {
      * @param int $delay
      * @return mixed|void
      */
-    public function release($delay = 0) {
+    public function release($delay = 0)
+    {
         parent::release($delay);
         $this->azure->updateMessage($this->queue, $this->job->getMessageId(), $this->job->getPopReceipt(), null, $delay);
     }
@@ -60,7 +77,8 @@ class AzureJob extends Job implements Contracts\Queue\Job {
      *
      * @return string
      */
-    public function getJobId() {
+    public function getJobId()
+    {
         return $this->job->getMessageId();
     }
 
@@ -69,7 +87,15 @@ class AzureJob extends Job implements Contracts\Queue\Job {
      *
      * @return string
      */
-    public function getRawBody() {
+    public function getRawBody()
+    {
+
+        // Automatic base64 decode
+        // Azure prefers base64 encoded messages
+        if ($this->autoBase64) {
+            return base64_decode($this->job->getMessageText());
+        }
+
         return $this->job->getMessageText();
     }
 
@@ -78,7 +104,8 @@ class AzureJob extends Job implements Contracts\Queue\Job {
      *
      * @return int
      */
-    public function attempts() {
+    public function attempts()
+    {
         return $this->job->getDequeueCount();
     }
 

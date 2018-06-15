@@ -18,7 +18,7 @@ class QueueServiceProvider extends ServiceProvider {
         $manager = $this->app['queue'];
 
         $manager->addConnector('azure', function () {
-            return new AzureConnector;
+            return new AzureConnector($this->app['config']['azure.queue']);
         });
     }
 
