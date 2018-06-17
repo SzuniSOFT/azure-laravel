@@ -14,7 +14,7 @@ class QueueServiceProviderTest extends TestCase {
     public function it_can_boot_and_setup_driver()
     {
 
-        $mockLaravel = Mockery::mock(\Illuminate\Foundation\Application::class);
+        //$mockLaravel = Mockery::mock(\Illuminate\Foundation\Application::class);
         $mockQueueManager = Mockery::mock(\Illuminate\Queue\QueueManager::class);
         $mockConfig = Mockery::mock(\Illuminate\Cache\Repository::class);
 
@@ -24,10 +24,10 @@ class QueueServiceProviderTest extends TestCase {
             return $driver === 'azure' && ($closure() instanceof AzureConnector);
         });
 
-        $mockLaravel->shouldReceive('offsetGet')->with('queue')->andReturn($mockQueueManager);
-        $mockLaravel->shouldReceive('offsetGet')->with('config')->andReturn($mockConfig);
+        $this->app->shouldReceive('offsetGet')->with('queue')->andReturn($mockQueueManager);
+        $this->app->shouldReceive('offsetGet')->with('config')->andReturn($mockConfig);
 
-        $serviceProvider = new QueueServiceProvider($mockLaravel);
+        $serviceProvider = new QueueServiceProvider($this->app);
 
         $serviceProvider->boot();
     }

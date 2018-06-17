@@ -9,7 +9,7 @@ use Mockery;
 class TestCase extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @var \Illuminate\Container\Container
+     * @var \Mockery\MockInterface
      */
     protected $app;
 
