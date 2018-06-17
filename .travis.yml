@@ -29,6 +29,7 @@ before_script:
   - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/contracts:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/filesystem:${ILLUMINATE_VERSION}" --no-update
+  - composer require "illuminate/cache:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/console:${ILLUMINATE_VERSION}" --no-update
   - composer update
 
