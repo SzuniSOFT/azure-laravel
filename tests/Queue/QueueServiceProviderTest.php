@@ -8,7 +8,7 @@ use Mockery;
 use SzuniSoft\Azure\Laravel\Providers\QueueServiceProvider;
 use SzuniSoft\Azure\Laravel\Queue\AzureConnector;
 
-class QueueServiceProviderTest extends \Orchestra\Testbench\TestCase {
+class QueueServiceProviderTest extends TestCase {
 
     /** @test */
     public function it_can_boot_and_setup_driver()

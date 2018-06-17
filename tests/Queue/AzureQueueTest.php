@@ -26,9 +26,16 @@ class AzureQueueTest extends TestCase {
      */
     protected $queue;
 
+    /**
+     * @var \Illuminate\Container\Container
+     */
+    protected $app;
+
     protected function setUp()
     {
+
         parent::setUp();
+
         $this->azure = Mockery::mock(\MicrosoftAzure\Storage\Queue\Internal\IQueue::class);
         $this->queue = new AzureQueue($this->azure, 'testqueue', 30);
         $this->queue->setContainer($this->app);

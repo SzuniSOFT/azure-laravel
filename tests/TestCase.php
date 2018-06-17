@@ -6,7 +6,7 @@ namespace SzuniSoft\Azure\Laravel\Test;
 
 use Mockery;
 
-class TestCase extends \Orchestra\Testbench\TestCase {
+class TestCase extends \PHPUnit\Framework\TestCase {
 
     protected function tearDown()
     {

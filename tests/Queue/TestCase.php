@@ -4,28 +4,20 @@
 namespace SzuniSoft\Azure\Laravel\Test\Queue;
 
 
+use Mockery;
+
 class TestCase extends \SzuniSoft\Azure\Laravel\Test\TestCase {
 
     /**
-     * @param \Illuminate\Foundation\Application $app
-     * @return array
+     * @var \Illuminate\Container\Container
      */
-    protected function getPackageProviders($app)
-    {
-        return [
-            \SzuniSoft\Azure\Laravel\Providers\QueueServiceProvider::class,
-        ];
-    }
+    protected $app;
 
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     * @return array
-     */
-    protected function getPackageAliases($app)
+    protected function setUp()
     {
-        return [
+        parent::setUp();
 
-        ];
+        $this->app = Mockery::mock(\Illuminate\Container\Container::class);
     }
 
 

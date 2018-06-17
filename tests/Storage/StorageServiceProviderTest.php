@@ -8,7 +8,7 @@ use League\Flysystem\Filesystem;
 use Mockery;
 use SzuniSoft\Azure\Laravel\Providers\StorageServiceProvider;
 
-class StorageServiceProviderTest extends \Orchestra\Testbench\TestCase {
+class StorageServiceProviderTest extends TestCase {
 
     /** @test */
     public function it_can_boot_and_setup_drivers()
