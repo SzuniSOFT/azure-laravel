@@ -6,13 +6,13 @@ cache:
     - vendor
 
 php:
-  - 7.0
-  - 7.1
   - 7.2
+  - 7.1
+  - 7.0
 
 env:
-  - ILLUMINATE_VERSION=5.5.*
   - ILLUMINATE_VERSION=5.6.*
+  - ILLUMINATE_VERSION=5.5.*
 
 matrix:
   fast_finish: true
@@ -20,8 +20,10 @@ matrix:
     - php: 7.0
       env: ILLUMINATE_VERSION=5.6.*
 
+before_install:
+  - composer self-update
+
 before_script:
-  - travis_retry composer self-update
   - travis_retry composer install --prefer-source --no-interaction
   - composer require "illuminate/queue:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
@@ -31,7 +33,7 @@ before_script:
   - composer update
 
 scripts:
-  - composer test
+  - php vendor/bin/phpunit -c phpunit.xml
 
 notifications:
   email: false
