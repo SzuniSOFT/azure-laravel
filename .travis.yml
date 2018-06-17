@@ -32,3 +32,6 @@ before_script:
 
 scripts:
   - composer test
+
+notifications:
+  email: false
