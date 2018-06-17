@@ -20,9 +20,6 @@ matrix:
     - php: 7.0
       env: ILLUMINATE_VERSION=5.6.*
 
-before_install:
-  - composer self-update
-
 before_script:
   - travis_retry composer install --prefer-source --no-interaction
   - composer require "illuminate/queue:${ILLUMINATE_VERSION}" --no-update
