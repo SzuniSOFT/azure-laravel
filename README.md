@@ -34,7 +34,7 @@ vendor/bin/phpunit
 
 # Changelog
 
-## 1.0.0 beta (2018-06-15)
+## 1.0.0 (2018-06-17)
 ### added
 - Blob storage driver support
 - File storage driver support
