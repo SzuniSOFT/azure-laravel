@@ -26,11 +26,6 @@ class AzureQueueTest extends TestCase {
      */
     protected $queue;
 
-    /**
-     * @var \Illuminate\Container\Container
-     */
-    protected $app;
-
     protected function setUp()
     {
 

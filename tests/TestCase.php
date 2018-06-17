@@ -8,6 +8,18 @@ use Mockery;
 
 class TestCase extends \PHPUnit\Framework\TestCase {
 
+    /**
+     * @var \Illuminate\Container\Container
+     */
+    protected $app;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->app = Mockery::mock(\Illuminate\Container\Container::class);
+    }
+
+
     protected function tearDown()
     {
         parent::tearDown();
