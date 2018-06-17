@@ -13,9 +13,6 @@ env:
 
 matrix:
   fast_finish: true
-  exclude:
-    - php: 7.0
-      env: ILLUMINATE_VERSION=5.6.*
 
 before_install:
   - composer require "illuminate/cache:${ILLUMINATE_VERSION}" --no-update
