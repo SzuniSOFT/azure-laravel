@@ -6,7 +6,19 @@ namespace SzuniSoft\Azure\Laravel\Test;
 
 use Mockery;
 
-class TestCase extends \Orchestra\Testbench\TestCase {
+class TestCase extends \PHPUnit\Framework\TestCase {
+
+    /**
+     * @var \Mockery\MockInterface
+     */
+    protected $app;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->app = Mockery::mock(\Illuminate\Container\Container::class);
+    }
+
 
     protected function tearDown()
     {

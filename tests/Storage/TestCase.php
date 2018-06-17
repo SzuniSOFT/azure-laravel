@@ -6,26 +6,9 @@ namespace SzuniSoft\Azure\Laravel\Test\Storage;
 
 class TestCase extends \SzuniSoft\Azure\Laravel\Test\TestCase {
 
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     * @return array
-     */
-    protected function getPackageProviders($app)
+    protected function setUp()
     {
-        return [
-            \SzuniSoft\Azure\Laravel\Providers\StorageServiceProvider::class
-        ];
-    }
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     * @return array
-     */
-    protected function getPackageAliases($app)
-    {
-        return [
-
-        ];
+        parent::setUp();
     }
 
     /**

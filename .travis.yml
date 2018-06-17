@@ -1,0 +1,36 @@
+language: php
+
+sudo: false
+
+php:
+  - master
+  - 7.2
+  - 7.1
+
+env:
+  - ILLUMINATE_VERSION=5.6.*
+  - ILLUMINATE_VERSION=5.5.*
+
+matrix:
+  fast_finish: true
+  exclude:
+    - php: 7.0
+      env: ILLUMINATE_VERSION=5.6.*
+
+before_install:
+  - composer require "illuminate/cache:${ILLUMINATE_VERSION}" --no-update
+  - composer require "illuminate/queue:${ILLUMINATE_VERSION}" --no-update
+  - composer require "illuminate/console:${ILLUMINATE_VERSION}" --no-update
+  - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
+  - composer require "illuminate/contracts:${ILLUMINATE_VERSION}" --no-update
+  - composer require "illuminate/filesystem:${ILLUMINATE_VERSION}" --no-update
+
+before_script:
+  - travis_retry composer install --prefer-source --no-interaction
+  - composer update
+
+scripts:
+  - phpunit -c phpunit.xml
+
+notifications:
+  email: false
