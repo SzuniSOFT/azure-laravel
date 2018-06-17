@@ -24,7 +24,7 @@
   },
   "require-dev": {
     "mockery/mockery" : "~1.0",
-    "phpunit/phpunit": "~7.0"
+    "phpunit/phpunit": "~7.2.4"
   },
   "autoload" : {
     "files": [

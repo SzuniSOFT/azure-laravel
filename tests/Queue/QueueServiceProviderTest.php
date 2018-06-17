@@ -20,12 +20,12 @@ class QueueServiceProviderTest extends TestCase {
 
         $mockConfig->shouldReceive('offsetGet')->with('azure.queue')->andReturn([]);
 
+        $this->app->shouldReceive('offsetGet')->with('queue')->andReturn($mockQueueManager);
+        $this->app->shouldReceive('offsetGet')->with('config')->andReturn($mockConfig);
+
         $mockQueueManager->shouldReceive('addConnector')->withArgs(function ($driver, $closure) {
             return $driver === 'azure' && ($closure() instanceof AzureConnector);
         });
-
-        $this->app->shouldReceive('offsetGet')->with('queue')->andReturn($mockQueueManager);
-        $this->app->shouldReceive('offsetGet')->with('config')->andReturn($mockConfig);
 
         $serviceProvider = new QueueServiceProvider($this->app);
 
