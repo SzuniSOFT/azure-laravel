@@ -1,17 +1,23 @@
-[![Total Downloads](https://poser.pugx.org/szunisoft/azure-laravel/downloads?format=flat-square)](https://packagist.org/packages/szunisoft/azure-laravel)
-[![License](https://poser.pugx.org/szunisoft/azure-laravel/license)](https://packagist.org/packages/szunisoft/azure-laravel)
-[![Build Status](https://travis-ci.com/SzuniSOFT/azure-laravel.svg?branch=master)](https://travis-ci.com/SzuniSOFT/azure-laravel)
+[![Travis](https://img.shields.io/travis/SzuniSOFT/azure-laravel.svg?style=for-the-badge)](https://travis-ci.com/SzuniSOFT/azure-laravel)
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/szunisoft/azure-laravel.svg?style=for-the-badge)](http://php.net/releases/7_1_0.php)
 
-# Download
-```
-composer require szunisoft/laravel
-```
+[![Packagist](https://img.shields.io/packagist/dt/szunisoft/azure-laravel.svg?style=for-the-badge)](https://packagist.org/packages/szunisoft/azure-laravel)
+[![license](https://img.shields.io/github/license/szunisoft/azure-laravel.svg?style=for-the-badge)](https://github.com/SzuniSOFT/azure-laravel)
+
+
+
+
 
 # Laravel Azure
 This package is a continuously developed package which provides a full Azure integration for Laravel offering the following drivers / adapters.
 
 - [Storage](./docs/storage.md#storage)
 - [Queue](./docs/queue.md#queue)
+
+# Download
+```
+composer require szunisoft/azure-laravel
+```
 
 # Configuration
 Export the package configuration:
