@@ -20,15 +20,17 @@ matrix:
     - php: 7.0
       env: ILLUMINATE_VERSION=5.6.*
 
-before_script:
-  - echo "${ILLUMINATE_VERSION}"
-  - travis_retry composer install --prefer-source --no-interaction
+before_install:
+  - echo -e "installing illuminate: $ILLUMINATE_VERSION"
   - composer require "illuminate/cache:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/queue:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/console:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/contracts:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/filesystem:${ILLUMINATE_VERSION}" --no-update
+
+before_script:
+  - travis_retry composer install --prefer-source --no-interaction
   - composer update
 
 scripts:
