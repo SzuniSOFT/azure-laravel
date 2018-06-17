@@ -21,7 +21,7 @@ matrix:
       env: ILLUMINATE_VERSION=5.6.*
 
 before_script:
-  - echo ${ILLUMINATE_VERSION}
+  - echo "${ILLUMINATE_VERSION}"
   - travis_retry composer install --prefer-source --no-interaction
   - composer require "illuminate/cache:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/queue:${ILLUMINATE_VERSION}" --no-update
