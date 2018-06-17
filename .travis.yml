@@ -1,5 +1,10 @@
 language: php
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - vendor
+
 php:
   - 7.0
   - 7.1
@@ -26,4 +31,4 @@ before_script:
   - composer update
 
 scripts:
-  - phpunit
+  - composer test
