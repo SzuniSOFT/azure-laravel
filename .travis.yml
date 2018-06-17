@@ -1,14 +1,16 @@
 language: php
 
+sudo: false
+
 cache:
   directories:
     - $HOME/.composer/cache
     - vendor
 
 php:
+  - master
   - 7.2
   - 7.1
-  - 7.0
 
 env:
   - ILLUMINATE_VERSION=5.6.*
@@ -21,7 +23,6 @@ matrix:
       env: ILLUMINATE_VERSION=5.6.*
 
 before_install:
-  - echo -e "installing illuminate $ILLUMINATE_VERSION"
   - composer require "illuminate/cache:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/queue:${ILLUMINATE_VERSION}" --no-update
   - composer require "illuminate/console:${ILLUMINATE_VERSION}" --no-update
@@ -34,7 +35,7 @@ before_script:
   - composer update
 
 scripts:
-  - php vendor/bin/phpunit -c phpunit.xml
+  - phpunit -c phpunit.xml
 
 notifications:
   email: false
