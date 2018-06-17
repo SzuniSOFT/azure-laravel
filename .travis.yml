@@ -2,11 +2,6 @@ language: php
 
 sudo: false
 
-cache:
-  directories:
-    - $HOME/.composer/cache
-    - vendor
-
 php:
   - master
   - 7.2
