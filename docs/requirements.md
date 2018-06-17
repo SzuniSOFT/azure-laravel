@@ -1,5 +1,8 @@
-* curl
-* openssl
-* mbstring
-* xsl
-* fileinfo
+# Compatibility
+
+ PHP | Laravel 
+ --- | --- 
+7.2.* | 5.6.* 
+7.1.* | 5.6.*
+7.2.* | 5.5.*
+7.1.* | 5.5.*

@@ -1,6 +1,5 @@
 [![Travis](https://img.shields.io/travis/SzuniSOFT/azure-laravel.svg?style=for-the-badge)](https://travis-ci.com/SzuniSOFT/azure-laravel)
-[![PHP from Packagist](https://img.shields.io/packagist/php-v/szunisoft/azure-laravel.svg?style=for-the-badge)](http://php.net/releases/7_1_0.php)
-
+[![GitHub release](https://img.shields.io/github/release/SzuniSOFT/azure-laravel.svg?style=for-the-badge)](https://github.com/SzuniSOFT/azure-laravel/releases)
 [![Packagist](https://img.shields.io/packagist/dt/szunisoft/azure-laravel.svg?style=for-the-badge)](https://packagist.org/packages/szunisoft/azure-laravel)
 [![license](https://img.shields.io/github/license/szunisoft/azure-laravel.svg?style=for-the-badge)](https://github.com/SzuniSOFT/azure-laravel)
 
