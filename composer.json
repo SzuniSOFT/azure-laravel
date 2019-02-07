@@ -1,6 +1,6 @@
 {
   "name" : "szunisoft/azure-laravel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "description" : "Laravel Azure package supporting storage queue",
   "keywords" : ["azure", "storage", "queue", "laravel"],
